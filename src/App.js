@@ -1,23 +1,28 @@
+import { FirebaseConfig } from "./config/Config"
+import {initializeApp} from "firebase/app"
+import Container  from "react-bootstrap/Container"
+import  Navbar from "react-bootstrap/Navbar"
+import Nav from "react-bootstrap/Nav"
 import logo from './logo.svg';
 import './App.css';
 
+
 function App() {
+  const FBapp = initializeApp(FirebaseConfig)
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Hello React Sudin
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <Navbar>
+      <Container>
+      <Navbar.Brand>App</Navbar.Brand>
+      <Nav>
+        <Nav.Link href="/home">Home</Nav.Link>
+        <Nav.Link href="/about">About</Nav.Link>
+        <Nav.Link href="/contact">Contact</Nav.Link>
+      </Nav>
+
+      </Container>
+    </Navbar>
+      <h1>React App</h1>
     </div>
   );
 }
