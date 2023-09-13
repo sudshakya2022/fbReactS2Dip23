@@ -3,14 +3,19 @@ import  Navbar from "react-bootstrap/Navbar"
 import Nav from "react-bootstrap/Nav"
 
 export function  Header ( props ){
+  // props.item is the value of nav state in App.js
+  // create a collection of navigation items
+  const Links = props.items.map( (item) => {
+    return (
+      <Nav.Link href={item.link}> {item.label} </Nav.Link>
+    )
+  } )
     return(
         <Navbar>
       <Container>
       <Navbar.Brand>App</Navbar.Brand>
       <Nav>
-        <Nav.Link href="/">Home</Nav.Link>
-        <Nav.Link href="/about">About</Nav.Link>
-        <Nav.Link href="/contact">Contact</Nav.Link>
+        {Links}
       </Nav>
 
       </Container>
