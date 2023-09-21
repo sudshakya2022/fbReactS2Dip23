@@ -12,6 +12,9 @@ import { Contact } from "./pages/Contact";
 import { Signup } from "./pages/Signup";
 import { Signout } from "./pages/Signout";
 import { Signin } from "./pages/Signin";
+//context
+import { AuthContext } from "./components/AuthContext"
+
 
 function App() {
   const FBapp = initializeApp(FirebaseConfig);
@@ -72,6 +75,7 @@ function App() {
   return (
     <div className="App">
       <Header items={nav} />
+      <AuthContext.Provider value={auth}>
       <Routes>
         <Route path="/" element={<Home greeting="You are in Home Page!" />} />
         <Route
@@ -86,6 +90,7 @@ function App() {
         <Route path='/signout' element={ <Signout handler={logOut}   />}/>
         <Route path="/signin" element={ <Signin handler={signIn} authstate={auth} /> } />
       </Routes>
+      </AuthContext.Provider>
     </div>
   );
 }
