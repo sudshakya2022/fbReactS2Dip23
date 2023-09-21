@@ -4,12 +4,14 @@ import Row from "react-bootstrap/Row"
 import  Col from "react-bootstrap/Col"
 import  Button from "react-bootstrap/Button"
 import {useState, useEffect} from 'react'
+import { useNavigate } from "react-router-dom"
 
 export function Signin( props ){
     const [email, setEmail] = useState('')
     const [validemail, setValidemail] = useState(false)
     const [password, setPassword] = useState("")
     const [validpassword, setValidpassword] = useState(false)
+    const navigate = useNavigate()
 
     useEffect( () => {
         if (email.indexOf('@') > 0){
@@ -26,13 +28,22 @@ export function Signin( props ){
             else{
                 setValidpassword(false)}   
             }, [password])
+        useEffect( () => {
+            if( props.authstate){
+                navigate("/")
+            }
+        }, [props.authstate])
     
+        const submitHandler = (evt) => {
+            evt.preventDefault()
+            props.handler( email, password )
+        }
 
     return(
         <Container>
         <Row>
             <Col md={{span:4, offset:4}}>
-                <Form>
+                <Form onSubmit={ submitHandler }>
                     
                     <Form.Group>
                         <Form.Label>Email</Form.Label>
@@ -40,6 +51,8 @@ export function Signin( props ){
                         type="email"
                         name="email"
                         placeholder="you@example.com"
+                        value={ email }
+                        onChange={ (evt) => setEmail(evt.target.value)}
                           
                         />
                     </Form.Group>
@@ -48,7 +61,9 @@ export function Signin( props ){
                         <Form.Control 
                         type="password" 
                         name="password"
-                        placeholder="minimum 8 characters" 
+                        placeholder="your password"
+                        value= { password }
+                        onChange= { (evt) => setPassword(evt.target.value)}
                         
                         />
                     </Form.Group>
@@ -56,6 +71,7 @@ export function Signin( props ){
                     variant="primary" 
                     class="mt-3 w-100" 
                     type="submit"
+                    disabled={ (validemail && validpassword) ? false : true }
                   
                     >
                     Signup
