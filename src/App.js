@@ -1,6 +1,6 @@
 import { FirebaseConfig } from "./config/Config";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 
@@ -10,23 +10,13 @@ import { About } from "./pages/About";
 import { Home } from "./pages/Home";
 import { Contact } from "./pages/Contact";
 import { Signup } from "./pages/Signup";
+import { Signout } from "./pages/Signout";
+import { Signin } from "./pages/Signin";
 
 function App() {
   const FBapp = initializeApp(FirebaseConfig);
   const FBauth = getAuth();
-  const [ auth, setAuth ] = useState(false)
-  //authentication observer
-  onAuthStateChanged( FBauth, ( user ) => {
-    if( user ) {
-      // currently authenticated
-      setAuth ( user )
-      console.log(user)
-    }
-    else{
-      // currently unauthenticated
-      setAuth( false )
-    }
-  })
+ 
   // navigation array
   const NavItems = [
     { label: "Home", link: "/" },
@@ -45,12 +35,40 @@ function App() {
   ];
   // application states
   const [nav, setNav] = useState(NavItems);
+  const [ auth, setAuth ] = useState(false)
+  //authentication observer
+  onAuthStateChanged( FBauth, ( user ) => {
+    if( user ) {
+      // currently authenticated
+      setAuth ( user )
+      setNav( AuthNavItems )
+    }
+    else{
+      // currently unauthenticated
+      setAuth( false )
+      setNav( NavItems )
+    }
+  })
   //signing up a user
   const signUp = (email, password) => {
     createUserWithEmailAndPassword(FBauth, email, password)
       .then((userCredential) => {})
       .catch((error) => console.log(error.message));
   };
+  const logOut = () => {
+    signOut ( FBauth ).then( () => {
+      // user is signed out
+    })
+  }
+
+  const signIn = ( email, password) => {
+    signInWithEmailAndPassword( FBauth ,  email,password)
+    .then ( ()=>{
+      //user is signed in
+  })
+  .catch((error) => {console.log(error)})
+}
+
   return (
     <div className="App">
       <Header items={nav} />
@@ -65,6 +83,8 @@ function App() {
           element={<Contact greeting="You are in Contact Page!" />}
         />
         <Route path="/signup" element={<Signup handler={signUp} />} />
+        <Route path='/signout' element={ <Signout handler={logOut}   />}/>
+        <Route path="/signin" element={ <Signin handler={signIn}/> } />
       </Routes>
     </div>
   );
